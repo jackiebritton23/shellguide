@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shell Water — Guided Buyer Experience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #1D9E75;
+  --green-dark: #0F6E56;
+  --green-light: #E8F7F1;
+  --green-mid: #9FE1CB;
+  --navy: #0D1B2A;
+  --stone: #F5F3EF;
+  --warm-gray: #EAE8E3;
+  --muted: #7A7870;
+  --border: #E0DDD7;
+  --white: #FFFFFF;
+  --mono: 'DM Mono', monospace;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--stone);
+  color: var(--navy);
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--navy);
+  padding: 10px 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 50;
+}
+.topbar-left { display: flex; align-items: center; gap: 10px; }
+.logo-mark { width: 28px; height: 28px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; }
+.logo-mark svg { width: 14px; height: 14px; fill: white; }
+.topbar-brand { font-family: 'DM Serif Display', serif; font-size: 15px; color: white; }
+.topbar-slash { color: rgba(255,255,255,0.25); margin: 0 4px; }
+.topbar-repo { font-family: var(--mono); font-size: 13px; color: rgba(255,255,255,0.55); }
+.topbar-right { display: flex; gap: 12px; align-items: center; }
+.topbar-tag { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; background: var(--green); color: white; border-radius: 20px; padding: 4px 12px; }
+
+/* ── HERO ── */
+.hero {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 5rem 2rem 4rem;
+  text-align: center;
+}
+.hero-inner { max-width: 720px; margin: 0 auto; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--green); background: var(--green-light);
+  border: 1px solid var(--green-mid); border-radius: 20px;
+  padding: 5px 14px; margin-bottom: 1.5rem;
+}
+.eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+.hero-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(36px, 6vw, 58px);
+  line-height: 1.1; color: var(--navy);
+  margin-bottom: 1rem;
+}
+.hero-title em { color: var(--green); font-style: italic; }
+.hero-sub {
+  font-size: 18px; color: var(--muted); max-width: 520px;
+  margin: 0 auto 2.5rem; line-height: 1.65;
+}
+.hero-btns { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--green); color: white; text-decoration: none;
+  font-weight: 600; font-size: 15px; padding: 13px 28px;
+  border-radius: 10px; transition: background 0.15s, transform 0.15s;
+}
+.btn-primary:hover { background: var(--green-dark); transform: translateY(-1px); }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: none; color: var(--navy); text-decoration: none;
+  font-weight: 500; font-size: 15px; padding: 13px 24px;
+  border-radius: 10px; border: 1.5px solid var(--border);
+  transition: border-color 0.15s, background 0.15s;
+}
+.btn-secondary:hover { border-color: #aaa; background: var(--stone); }
+
+/* ── STAT STRIP ── */
+.stat-strip {
+  background: var(--navy);
+  display: flex; justify-content: center;
+  gap: 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.stat-item {
+  padding: 1.5rem 3rem; text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+.stat-item:last-child { border-right: none; }
+.stat-num { font-family: 'DM Serif Display', serif; font-size: 32px; color: white; }
+.stat-label { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 3px; letter-spacing: 0.03em; }
+
+/* ── MAIN LAYOUT ── */
+.page { max-width: 960px; margin: 0 auto; padding: 4rem 2rem 6rem; display: grid; grid-template-columns: 1fr 280px; gap: 3rem; align-items: start; }
+
+/* ── CONTENT ── */
+.content {}
+.section { margin-bottom: 3.5rem; }
+.section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--green); margin-bottom: 0.6rem; display: flex; align-items: center; gap: 8px;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 26px; color: var(--navy); margin-bottom: 0.75rem;
+}
+.section-body { font-size: 15px; color: #4a4840; line-height: 1.75; }
+.section-body p + p { margin-top: 1rem; }
+.section-body strong { color: var(--navy); font-weight: 600; }
+
+/* Problem/solution callout */
+.callout {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 14px; padding: 1.5rem; margin: 1.5rem 0;
+}
+.callout.danger { border-left: 3px solid #E24B4A; }
+.callout.success { border-left: 3px solid var(--green); }
+.callout-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.6rem; }
+.callout.danger .callout-label { color: #A32D2D; }
+.callout.success .callout-label { color: var(--green-dark); }
+.callout-text { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+/* Flow diagram */
+.flow { display: flex; flex-direction: column; gap: 0; margin: 1.5rem 0; }
+.flow-step {
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 1rem 0; border-bottom: 1px solid var(--warm-gray);
+}
+.flow-step:last-child { border-bottom: none; }
+.flow-num {
+  width: 28px; height: 28px; border-radius: 50%; background: var(--green);
+  color: white; font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  margin-top: 2px;
+}
+.flow-content {}
+.flow-q { font-size: 14px; font-weight: 600; color: var(--navy); }
+.flow-why { font-size: 13px; color: var(--muted); margin-top: 3px; }
+
+/* Product mapping table */
+.map-table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 13px; }
+.map-table thead th {
+  text-align: left; font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--muted); padding: 8px 12px;
+  border-bottom: 1px solid var(--border); background: var(--stone);
+}
+.map-table tbody td {
+  padding: 10px 12px; border-bottom: 1px solid var(--warm-gray);
+  vertical-align: top; color: #4a4840; line-height: 1.5;
+}
+.map-table tbody tr:last-child td { border-bottom: none; }
+.map-table tbody tr:hover td { background: var(--white); }
+.tag {
+  display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.05em;
+  text-transform: uppercase; padding: 2px 8px; border-radius: 20px;
+  background: var(--green-light); color: var(--green-dark);
+  border: 1px solid var(--green-mid);
+}
+
+/* Code block */
+.code-wrap {
+  background: var(--navy); border-radius: 12px; overflow: hidden; margin: 1.25rem 0;
+}
+.code-header {
+  background: rgba(255,255,255,0.05); padding: 10px 16px;
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.code-filename { font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,0.45); }
+.code-lang { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); }
+.code-body { padding: 1.25rem 1.5rem; font-family: var(--mono); font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.7; overflow-x: auto; white-space: pre; }
+.code-body .cm { color: rgba(255,255,255,0.3); }
+.code-body .ck { color: #9FE1CB; }
+.code-body .cs { color: #FAC775; }
+.code-body .cn { color: #85B7EB; }
+
+/* ── SIDEBAR ── */
+.sidebar {}
+.sidebar-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden; margin-bottom: 1rem;
+  position: sticky; top: 80px;
+}
+.sidebar-card-top {
+  background: var(--navy); padding: 1.25rem 1.5rem;
+}
+.sidebar-card-title { font-family: 'DM Serif Display', serif; font-size: 18px; color: white; margin-bottom: 0.25rem; }
+.sidebar-card-sub { font-size: 12px; color: rgba(255,255,255,0.45); }
+.sidebar-body { padding: 1.25rem 1.5rem; }
+.sidebar-item {
+  display: flex; gap: 10px; padding: 10px 0;
+  border-bottom: 1px solid var(--warm-gray); align-items: flex-start;
+}
+.sidebar-item:last-child { border-bottom: none; padding-bottom: 0; }
+.sidebar-ico { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.sidebar-item-label { font-size: 13px; font-weight: 600; color: var(--navy); }
+.sidebar-item-desc { font-size: 12px; color: var(--muted); margin-top: 1px; }
+.sidebar-divider { height: 1px; background: var(--border); margin: 1rem 0; }
+.sidebar-cta {
+  display: block; background: var(--green); color: white; text-decoration: none;
+  text-align: center; font-weight: 600; font-size: 14px;
+  padding: 12px; border-radius: 9px; transition: background 0.15s;
+  margin-top: 1rem;
+}
+.sidebar-cta:hover { background: var(--green-dark); }
+.sidebar-cta-sec {
+  display: block; text-align: center; font-size: 13px; color: var(--muted);
+  text-decoration: none; margin-top: 8px; padding: 10px;
+  border: 1.5px solid var(--border); border-radius: 9px; transition: all 0.15s;
+}
+.sidebar-cta-sec:hover { border-color: #bbb; color: var(--navy); }
+
+/* ── FOOTER ── */
+.footer {
+  background: var(--navy); border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 2.5rem 2rem; text-align: center;
+}
+.footer-logo { font-family: 'DM Serif Display', serif; font-size: 18px; color: white; margin-bottom: 0.5rem; }
+.footer-sub { font-size: 13px; color: rgba(255,255,255,0.35); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 720px) {
+  .page { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .stat-strip { flex-wrap: wrap; }
+  .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); width: 50%; }
+  .topbar-repo { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="topbar-left">
+    <div class="logo-mark"><svg viewBox="0 0 24 24"><path d="M12 2C8 8 4 11 4 15a8 8 0 0016 0c0-4-4-7-8-13z"/></svg></div>
+    <span class="topbar-brand">Shell Water Systems</span>
+    <span class="topbar-slash">/</span>
+    <span class="topbar-repo">guided-buyer-experience</span>
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-tag">Demo Ready</span>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow"><span class="eyebrow-dot"></span> Conversion optimization tool</div>
+    <h1 class="hero-title">Guided Buyer Experience<br>for <em>Shell Water Systems</em></h1>
+    <p class="hero-sub">A 5-question quiz that matches customers to the right water system — and sends them directly to the product page to buy.</p>
+    <div class="hero-btns">
+      <a href="shellwater-quiz-demo.html" class="btn-primary">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>
+        View live demo
+      </a>
+      <a href="shellwater-quiz-embed.html" class="btn-secondary">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
+        Embed code
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="stat-strip">
+  <div class="stat-item"><div class="stat-num">90%</div><div class="stat-label">current abandonment rate</div></div>
+  <div class="stat-item"><div class="stat-num">37</div><div class="stat-label">products → 1 recommendation</div></div>
+  <div class="stat-item"><div class="stat-num">5</div><div class="stat-label">questions to match</div></div>
+  <div class="stat-item"><div class="stat-num">60s</div><div class="stat-label">average completion time</div></div>
+</div>
+
+<div class="page">
+  <main class="content">
+
+    <!-- PROBLEM -->
+    <div class="section">
+      <div class="section-label">The problem</div>
+      <h2 class="section-title">37 products. Zero guidance.</h2>
+      <div class="section-body">
+        <p>Shell Water Systems sells excellent water filtration products — but their shop presents all 37 SKUs to every visitor with no guidance on which to choose. Customers who don't know the difference between a water softener, a salt-free conditioner, and a whole-house filter (which is most of them) freeze up and leave.</p>
+      </div>
+      <div class="callout danger">
+        <div class="callout-label">⚠ Current state</div>
+        <div class="callout-text">Customers arrive at the shop page, face an overwhelming product grid, can't identify what they need, and abandon — at a 90% rate. The product quality isn't the issue. The buying experience is.</div>
+      </div>
+      <div class="callout success">
+        <div class="callout-label">✓ Solution</div>
+        <div class="callout-text">A short guided quiz that speaks the customer's language — water problems they recognize — and ends with a single confident recommendation and a direct link to buy it.</div>
+      </div>
+    </div>
+
+    <!-- QUIZ FLOW -->
+    <div class="section">
+      <div class="section-label">The quiz</div>
+      <h2 class="section-title">5 questions, one answer</h2>
+      <div class="section-body">
+        <p>Each question is designed to eliminate products that don't fit and zero in on the right system. The order matters — water source comes first because well water immediately changes the product set, saving customers from irrelevant options.</p>
+      </div>
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-content">
+            <div class="flow-q">City or well water?</div>
+            <div class="flow-why">Well water routes directly to the H2S/Iron unit — the only system built for untreated groundwater.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-content">
+            <div class="flow-q">What problems are you experiencing?</div>
+            <div class="flow-why">Multi-select. Hard water + taste = combo system. Hard water only = softener. Taste only = whole-house filter.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-content">
+            <div class="flow-q">Do you want filtered drinking water at the tap?</div>
+            <div class="flow-why">If yes, the RO system is added as a secondary recommendation on the results screen.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">4</div>
+          <div class="flow-content">
+            <div class="flow-q">How many bathrooms?</div>
+            <div class="flow-why">Determines sizing (1–3, 4–6, 7+). Passed through to the product page where variants are pre-selected.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">5</div>
+          <div class="flow-content">
+            <div class="flow-q">Salt-based or salt-free preference?</div>
+            <div class="flow-why">Splits softener/combo recommendations between salt and salt-free product lines. "Not sure" defaults to salt-based (most effective).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCT MAPPING -->
+    <div class="section">
+      <div class="section-label">Recommendation logic</div>
+      <h2 class="section-title">How answers map to products</h2>
+      <div class="section-body">
+        <p>The quiz uses a simple decision tree — no machine learning, no complex scoring. Just clean conditional logic that mirrors how a knowledgeable sales rep would think.</p>
+      </div>
+      <table class="map-table">
+        <thead>
+          <tr>
+            <th>Condition</th>
+            <th>Product recommended</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Well water <em>or</em> iron/rotten egg selected</td>
+            <td><span class="tag">H2S / Iron Removal</span> $2,644</td>
+          </tr>
+          <tr>
+            <td>Hard water + filtration concern, salt-based</td>
+            <td><span class="tag">Salt Softener + Filtration Combo</span> $2,664–$3,900</td>
+          </tr>
+          <tr>
+            <td>Hard water + filtration concern, salt-free</td>
+            <td><span class="tag">Salt-Free Combo</span> $2,808–$4,196</td>
+          </tr>
+          <tr>
+            <td>Hard water only, salt-based</td>
+            <td><span class="tag">Salt Based Softener</span> $1,773–$2,227</td>
+          </tr>
+          <tr>
+            <td>Hard water only, salt-free</td>
+            <td><span class="tag">Go Natural Salt-Free</span> $1,772–$2,374</td>
+          </tr>
+          <tr>
+            <td>Taste/odor/contaminants/unsure</td>
+            <td><span class="tag">Whole House Filtration</span> $1,354–$2,267</td>
+          </tr>
+          <tr>
+            <td>+ "Yes" to drinking water</td>
+            <td><span class="tag">+ RO Add-on</span> $697 (secondary card)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- FILES -->
+    <div class="section">
+      <div class="section-label">Files in this repo</div>
+      <h2 class="section-title">What's included</h2>
+      <div class="section-body">
+        <p>Two HTML files — one to show clients, one to hand to a developer. No frameworks, no build tools, no dependencies. Everything runs in a browser from a single file.</p>
+      </div>
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-filename">repo structure</span>
+          <span class="code-lang">plaintext</span>
+        </div>
+        <div class="code-body"><span class="ck">shellwater-guided-buyer/</span>
+├── <span class="cs">README.html</span>              <span class="cm">← you are here</span>
+├── <span class="cs">shellwater-quiz-demo.html</span>  <span class="cm">← client presentation version</span>
+└── <span class="cs">shellwater-quiz-embed.html</span> <span class="cm">← production embed code</span></div>
+      </div>
+
+      <div class="code-wrap" style="margin-top: 1rem;">
+        <div class="code-header">
+          <span class="code-filename">shellwater-quiz-demo.html</span>
+          <span class="code-lang">demo</span>
+        </div>
+        <div class="code-body"><span class="cm">Full branded presentation page with:</span>
+<span class="ck">·</span> Shell Water logo, nav, and phone number
+<span class="ck">·</span> Hero section with headline + stats
+<span class="ck">·</span> Live working quiz (identical logic)
+<span class="ck">·</span> "Why it works" explainer for the client
+<span class="ck">·</span> "CLIENT DEMO" banner so context is clear
+<span class="ck">·</span> DM Serif Display + DM Sans typography
+<span class="ck">·</span> All real product links to shellwatersystems.com</div>
+      </div>
+
+      <div class="code-wrap" style="margin-top: 1rem;">
+        <div class="code-header">
+          <span class="code-filename">shellwater-quiz-embed.html</span>
+          <span class="code-lang">production</span>
+        </div>
+        <div class="code-body"><span class="cm">Clean embed-ready file with:</span>
+<span class="ck">·</span> No demo chrome, no extra sections
+<span class="ck">·</span> Self-contained (no CDN dependencies)
+<span class="ck">·</span> Paste body content into JotForm HTML widget
+<span class="ck">·</span> Or upload full file to shellwatersystems.com/find-my-system
+<span class="ck">·</span> Mobile responsive, works in any browser
+<span class="ck">·</span> ~150 lines total</div>
+      </div>
+    </div>
+
+    <!-- DEPLOY -->
+    <div class="section">
+      <div class="section-label">Deployment</div>
+      <h2 class="section-title">Two ways to go live</h2>
+      <div class="section-body">
+        <p><strong>Option A — JotForm HTML Widget</strong><br>Open <code style="font-family: var(--mono); font-size: 13px; background: var(--warm-gray); padding: 2px 6px; border-radius: 4px;">shellwater-quiz-embed.html</code> in a text editor. Copy everything between the <code style="font-family: var(--mono); font-size: 13px; background: var(--warm-gray); padding: 2px 6px; border-radius: 4px;">&lt;body&gt;</code> tags. In JotForm, drag in a Custom HTML widget and paste it in. The quiz renders fully inside JotForm.</p>
+        <p style="margin-top: 1rem;"><strong>Option B — Standalone page (recommended)</strong><br>Upload the full <code style="font-family: var(--mono); font-size: 13px; background: var(--warm-gray); padding: 2px 6px; border-radius: 4px;">shellwater-quiz-embed.html</code> file to the Shell Water server as <code style="font-family: var(--mono); font-size: 13px; background: var(--warm-gray); padding: 2px 6px; border-radius: 4px;">shellwatersystems.com/find-my-system</code>. Link to it from the homepage hero, the top nav, and any JotForm thank-you redirects. This gives more control over layout and avoids JotForm widget size limitations.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <aside class="sidebar">
+    <div class="sidebar-card">
+      <div class="sidebar-card-top">
+        <div class="sidebar-card-title">Quick links</div>
+        <div class="sidebar-card-sub">Open in browser to preview</div>
+      </div>
+      <div class="sidebar-body">
+        <div class="sidebar-item">
+          <span class="sidebar-ico">🎬</span>
+          <div>
+            <div class="sidebar-item-label">Client demo</div>
+            <div class="sidebar-item-desc">Full branded presentation with explainer</div>
+          </div>
+        </div>
+        <div class="sidebar-item">
+          <span class="sidebar-ico">⚙️</span>
+          <div>
+            <div class="sidebar-item-label">Embed code</div>
+            <div class="sidebar-item-desc">Production-ready, JotForm or standalone</div>
+          </div>
+        </div>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-item">
+          <span class="sidebar-ico">🏪</span>
+          <div>
+            <div class="sidebar-item-label">Shell Water shop</div>
+            <div class="sidebar-item-desc">shellwatersystems.com/shop</div>
+          </div>
+        </div>
+        <div class="sidebar-item">
+          <span class="sidebar-ico">📞</span>
+          <div>
+            <div class="sidebar-item-label">Expert line</div>
+            <div class="sidebar-item-desc">1-888-265-9001</div>
+          </div>
+        </div>
+        <a href="shellwater-quiz-demo.html" class="sidebar-cta">View live demo →</a>
+        <a href="shellwater-quiz-embed.html" class="sidebar-cta-sec">Get embed code</a>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<footer class="footer">
+  <div class="footer-logo">Shell Water Systems</div>
+  <div class="footer-sub">Guided Buyer Experience — built to convert, not confuse.</div>
+</footer>
+
+</body>
+</html>

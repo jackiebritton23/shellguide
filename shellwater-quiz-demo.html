@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shell Water Systems — Guided Buyer Experience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green: #1D9E75;
+  --green-dark: #0F6E56;
+  --green-light: #E8F7F1;
+  --green-mid: #9FE1CB;
+  --navy: #0D1B2A;
+  --stone: #F5F3EF;
+  --muted: #7A7870;
+  --border: #E8E5DF;
+  --white: #FFFFFF;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--stone);
+  color: var(--navy);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ── TOP NAV ── */
+.demo-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(245,243,239,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px;
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; }
+.nav-logo-dot { width: 26px; height: 26px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; }
+.nav-logo-dot svg { width: 14px; height: 14px; fill: white; }
+.nav-brand { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--navy); }
+.nav-tag { font-size: 11px; color: var(--muted); background: var(--green-light); border: 1px solid var(--green-mid); border-radius: 20px; padding: 3px 10px; font-weight: 500; letter-spacing: 0.03em; }
+.nav-phone { font-size: 13px; color: var(--muted); font-weight: 500; }
+
+/* ── HERO ── */
+.hero {
+  padding: 120px 2rem 80px;
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--green); background: var(--green-light); border: 1px solid var(--green-mid);
+  border-radius: 20px; padding: 5px 14px; margin-bottom: 1.5rem;
+}
+.hero-eyebrow span { width: 6px; height: 6px; border-radius: 50%; background: var(--green); display: inline-block; }
+.hero-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(36px, 6vw, 56px);
+  line-height: 1.15;
+  color: var(--navy);
+  margin-bottom: 1rem;
+}
+.hero-title em { font-style: italic; color: var(--green); }
+.hero-sub {
+  font-size: 17px; color: var(--muted); line-height: 1.7;
+  max-width: 480px; margin: 0 auto 2.5rem;
+}
+.hero-stats {
+  display: flex; justify-content: center; gap: 2.5rem;
+  border-top: 1px solid var(--border); padding-top: 2rem;
+}
+.stat-item { text-align: center; }
+.stat-num { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--navy); }
+.stat-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+/* ── QUIZ CARD ── */
+.quiz-section {
+  max-width: 620px;
+  margin: 0 auto 5rem;
+  padding: 0 1.5rem;
+}
+.quiz-card {
+  background: var(--white);
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: 0 4px 40px rgba(13,27,42,0.08);
+}
+.quiz-card-top {
+  background: linear-gradient(135deg, var(--navy) 0%, #1a3a50 100%);
+  padding: 1.5rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.quiz-card-label { font-size: 12px; color: rgba(255,255,255,0.5); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+.quiz-card-steps { font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 500; }
+.progress-bg { height: 3px; background: rgba(255,255,255,0.15); border-radius: 2px; margin-top: 0.75rem; }
+.progress-green { height: 3px; background: var(--green); border-radius: 2px; transition: width 0.5s cubic-bezier(.4,0,.2,1); }
+.quiz-inner { padding: 2rem 2rem 2.5rem; }
+
+.q-text {
+  font-family: 'DM Serif Display', serif;
+  font-size: 24px; line-height: 1.3; color: var(--navy);
+  margin-bottom: 0.4rem;
+}
+.q-sub { font-size: 14px; color: var(--muted); margin-bottom: 1.75rem; }
+
+.opts { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+.opts.c1 { grid-template-columns: 1fr; }
+.opts.c3 { grid-template-columns: 1fr 1fr 1fr; }
+
+.opt {
+  background: var(--stone);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 15px;
+  cursor: pointer;
+  display: flex; align-items: flex-start; gap: 10px;
+  transition: all 0.18s ease;
+  text-align: left; width: 100%;
+  font-family: inherit;
+}
+.opt:hover { border-color: var(--green); background: var(--green-light); transform: translateY(-1px); }
+.opt.sel {
+  border-color: var(--green); border-width: 2px;
+  background: var(--green-light);
+  box-shadow: 0 0 0 3px rgba(29,158,117,0.12);
+}
+.opt-ico { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+.opt-l { font-size: 14px; font-weight: 600; color: var(--navy); }
+.opt-d { font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+
+.nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; }
+.btn-bk {
+  background: none; border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 10px 20px;
+  font-size: 14px; color: var(--muted); cursor: pointer;
+  font-family: inherit; transition: all 0.15s;
+}
+.btn-bk:hover { border-color: #bbb; color: var(--navy); }
+.btn-nx {
+  background: var(--green); border: none;
+  border-radius: 10px; padding: 12px 30px;
+  font-size: 15px; font-weight: 600; color: #fff;
+  cursor: pointer; font-family: inherit;
+  opacity: 0.3; pointer-events: none;
+  transition: all 0.2s;
+}
+.btn-nx.on { opacity: 1; pointer-events: all; }
+.btn-nx.on:hover { background: var(--green-dark); transform: translateY(-1px); }
+
+/* ── RESULT ── */
+.result-wrap { animation: rUp 0.45s cubic-bezier(.4,0,.2,1); }
+@keyframes rUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:none; } }
+
+.result-top-label {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--green); margin-bottom: 0.4rem;
+}
+.result-heading {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px; color: var(--navy); margin-bottom: 0.4rem;
+}
+.result-sub { font-size: 14px; color: var(--muted); margin-bottom: 1.75rem; }
+
+.rec-block { border: 1.5px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 12px; }
+.rec-top { background: var(--stone); padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); }
+.rec-badge {
+  display: inline-block; background: var(--green-light); color: var(--green-dark);
+  font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 20px; margin-bottom: 0.5rem;
+  border: 1px solid var(--green-mid);
+}
+.rec-name { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--navy); }
+.rec-body-inner { padding: 1.5rem; }
+.rec-why { font-size: 14px; color: #4a4a42; line-height: 1.7; margin-bottom: 1.25rem; }
+.rec-feats { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; margin-bottom: 1.25rem; }
+.rec-feats li { font-size: 13px; color: var(--muted); padding-left: 14px; position: relative; }
+.rec-feats li::before { content:''; position:absolute; left:0; top:7px; width:5px; height:5px; border-radius:50%; background:var(--green); }
+.rec-price { font-size: 18px; font-weight: 600; color: var(--navy); margin-bottom: 1.25rem; }
+.rec-price span { font-size: 12px; color: var(--muted); font-weight: 400; margin-left: 8px; }
+.btn-shop {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  width: 100%; background: var(--green); color: #fff; border: none;
+  border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 600;
+  cursor: pointer; text-decoration: none; font-family: inherit;
+  transition: all 0.15s;
+}
+.btn-shop:hover { background: var(--green-dark); transform: translateY(-1px); }
+.btn-expert {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; background: none; border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 12px; font-size: 14px; color: var(--muted);
+  cursor: pointer; text-decoration: none; font-family: inherit; margin-top: 8px;
+  transition: all 0.15s;
+}
+.btn-expert:hover { border-color: #bbb; color: var(--navy); background: var(--stone); }
+.restart-btn { text-align:center; margin-top:1.25rem; font-size:13px; color: #bbb; cursor:pointer; }
+.restart-btn:hover { color: var(--muted); text-decoration: underline; }
+
+/* ── WHY SECTION ── */
+.why-section {
+  max-width: 900px;
+  margin: 0 auto 6rem;
+  padding: 0 1.5rem;
+}
+.section-eyebrow {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--green); margin-bottom: 0.75rem;
+}
+.section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(26px, 4vw, 36px);
+  color: var(--navy); margin-bottom: 0.75rem;
+}
+.section-sub { font-size: 16px; color: var(--muted); max-width: 500px; margin-bottom: 3rem; }
+.why-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;
+}
+.why-card {
+  background: var(--white); border: 1px solid var(--border); border-radius: 16px;
+  padding: 1.5rem;
+}
+.why-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 16px; margin-bottom: 1rem; }
+.why-title { font-size: 15px; font-weight: 600; color: var(--navy); margin-bottom: 0.4rem; }
+.why-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+/* ── FOOTER ── */
+.demo-footer {
+  background: var(--navy); color: rgba(255,255,255,0.5);
+  text-align: center; padding: 2rem 1.5rem;
+  font-size: 13px;
+}
+.demo-footer strong { color: rgba(255,255,255,0.8); }
+
+/* ── DEMO BANNER ── */
+.demo-banner {
+  background: var(--navy); color: rgba(255,255,255,0.85);
+  text-align: center; padding: 10px 1.5rem;
+  font-size: 12px; letter-spacing: 0.04em; font-weight: 500;
+}
+.demo-banner strong { color: var(--green); }
+</style>
+</head>
+<body>
+
+<div class="demo-banner">
+  <strong>CLIENT DEMO</strong> &nbsp;·&nbsp; Guided Buyer Experience for Shell Water Systems
+</div>
+
+<nav class="demo-nav">
+  <div class="nav-logo">
+    <div class="nav-logo-dot">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8 8 4 11 4 15a8 8 0 0016 0c0-4-4-7-8-13z"/></svg>
+    </div>
+    <span class="nav-brand">Shell Water Systems</span>
+  </div>
+  <span class="nav-tag">Guided Buyer Experience</span>
+  <span class="nav-phone">1-888-265-9001</span>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow"><span></span> Find your perfect system</div>
+  <h1 class="hero-title">Clean water starts with the <em>right</em> system</h1>
+  <p class="hero-sub">Answer 5 quick questions and we'll match you with the exact system your home needs — no guesswork, no overwhelm.</p>
+  <div class="hero-stats">
+    <div class="stat-item"><div class="stat-num">37</div><div class="stat-label">systems available</div></div>
+    <div class="stat-item"><div class="stat-num">5</div><div class="stat-label">questions to match</div></div>
+    <div class="stat-item"><div class="stat-num">20+</div><div class="stat-label">years experience</div></div>
+  </div>
+</section>
+
+<section class="quiz-section">
+  <div class="quiz-card">
+    <div class="quiz-card-top">
+      <div>
+        <div class="quiz-card-label">Water system finder</div>
+        <div class="progress-bg"><div class="progress-green" id="prog" style="width:20%"></div></div>
+      </div>
+      <div class="quiz-card-steps" id="step-count">Step 1 of 5</div>
+    </div>
+    <div class="quiz-inner" id="body"></div>
+  </div>
+</section>
+
+<section class="why-section">
+  <div class="section-eyebrow">Why it works</div>
+  <h2 class="section-title">Built to convert, not confuse</h2>
+  <p class="section-sub">This experience replaces 37 product listings with a guided path that ends in one confident recommendation.</p>
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="why-icon">🎯</div>
+      <div class="why-title">Problem-first flow</div>
+      <div class="why-desc">Starts with symptoms customers recognize, not technical product names they don't know.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">⚡</div>
+      <div class="why-title">5 questions, 60 seconds</div>
+      <div class="why-desc">Short enough to complete, specific enough to give a confident recommendation.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🛒</div>
+      <div class="why-title">Straight to product page</div>
+      <div class="why-desc">Recommendation links directly to the right product — one click to add to cart.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">📞</div>
+      <div class="why-title">Expert escape hatch</div>
+      <div class="why-desc">Every result includes the direct phone number for buyers who want to talk it through first.</div>
+    </div>
+  </div>
+</section>
+
+<footer class="demo-footer">
+  <strong>Shell Water Systems</strong> — Guided Buyer Experience &nbsp;·&nbsp; Embed-ready for JotForm or shellwatersystems.com
+</footer>
+
+<script>
+const steps=[
+  {id:'source',q:'Where does your home water come from?',sub:'This affects the type of filtration you need.',multi:false,cols:2,opts:[
+    {v:'city',i:'🏙️',l:'City / Municipal',d:'Treated tap water from a utility'},
+    {v:'well',i:'🌿',l:'Private well',d:'Untreated groundwater'}
+  ]},
+  {id:'problems',q:'What water problems are you dealing with?',sub:'Select all that apply.',multi:true,cols:2,opts:[
+    {v:'hardness',i:'🪨',l:'Hard water / scale',d:'Buildup on faucets, dishes, appliances'},
+    {v:'taste',i:'💧',l:'Bad taste or odor',d:'Chlorine smell, musty, or off flavors'},
+    {v:'skin',i:'✋',l:'Dry hair & skin',d:'Dullness after showering'},
+    {v:'contaminants',i:'⚗️',l:'Contaminants',d:'PFAS, heavy metals, chloramine'},
+    {v:'iron',i:'🟤',l:'Rotten egg / iron',d:'H2S smell, rust stains, well water'},
+    {v:'unsure',i:'❓',l:'Not sure',d:'Just want cleaner water overall'}
+  ]},
+  {id:'drinking',q:'Do you want filtered drinking water at the tap?',sub:'In addition to whole-home treatment.',multi:false,cols:2,opts:[
+    {v:'yes',i:'🥤',l:'Yes — add drinking water',d:'Under-sink RO system at kitchen tap'},
+    {v:'no',i:'🏠',l:'No — whole home is enough',d:'Single system for all water'}
+  ]},
+  {id:'bathrooms',q:'How many bathrooms does your home have?',sub:'Helps us size the right system for your flow rate.',multi:false,cols:3,opts:[
+    {v:'1-3',i:'🛁',l:'1–3',d:'Small home'},
+    {v:'4-6',i:'🏡',l:'4–6',d:'Medium home'},
+    {v:'7+',i:'🏘️',l:'7+',d:'Large home'}
+  ]},
+  {id:'salt',q:'Salt-based or salt-free?',sub:'Both work well — different trade-offs.',multi:false,cols:2,opts:[
+    {v:'salt',i:'💪',l:'Salt-based',d:'Most effective softening, requires refills'},
+    {v:'saltfree',i:'🌱',l:'Salt-free',d:'Low maintenance, eco-friendly'},
+    {v:'unsure',i:'🤷',l:'Not sure',d:'Recommend whatever works best'}
+  ]}
+];
+const prods={
+  iron:{name:'H2S / Iron Removal Unit',badge:'Well water specialist',price:'$2,644',why:'Your well water contains H2S sulfur and iron — these require a dedicated removal system. This unit eliminates rotten egg odor and rust staining before they enter your home.',features:['Removes H2S sulfur odor','Eliminates iron & rust stains','Built for well water','Lifetime tank & valve warranty'],url:'https://shellwatersystems.com/product/h2s-iron-removal-unit-for-well-water/'},
+  saltCombo:{name:'Salt Based Softener + Whole House Filtration',badge:'Most popular combo',price:'$2,664–$3,900',why:'You need both softening and filtration — this combo eliminates hard water and removes chlorine, sediment, and contaminants throughout your home in one system.',features:['Eliminates hard water scale','Removes chlorine & sediment','Sized to your home','Free shipping + lifetime warranty'],url:'https://shellwatersystems.com/product/salt-base-water-softener-with-whole-house-filtration/'},
+  saltFreeCombo:{name:'Go Natural Salt Free Conditioner + Whole House Filtration',badge:'Eco-friendly combo',price:'$2,808–$4,196',why:'You want soft, filtered water without salt maintenance. This system conditions and filters your whole home with zero brine discharge — the low-hassle choice.',features:['No salt or brine waste','Conditions AND filters whole home','Low maintenance','Lifetime warranty'],url:'https://shellwatersystems.com/product/filter-softener-combos/'},
+  saltSoftener:{name:'Salt Based Water Softener',badge:'Best for hard water',price:'$1,773–$2,227',why:'Hard water is your primary issue. Salt-based softening is the gold standard — it fully removes hardness minerals, protects appliances, and leaves hair and skin noticeably softer.',features:['Removes hardness minerals','Protects appliances & pipes','Eliminates scale buildup','Sized to your home'],url:'https://shellwatersystems.com/product/salt-based-water-softener/'},
+  saltFreeSoftener:{name:'Go Natural Salt Free Conditioner',badge:'Salt-free softening',price:'$1,772–$2,374',why:'Conditioned water without the salt. Prevents scale naturally and requires minimal maintenance — ideal if you want results without the upkeep.',features:['No salt required','Prevents scale naturally','Low maintenance','Lifetime warranty'],url:'https://shellwatersystems.com/product/go-natural-salt-free-conditioner/'},
+  wholeHouse:{name:'Whole House Filtration',badge:'Filtration focus',price:'$1,354–$2,267',why:'Your main concern is filtration — removing chlorine, sediment, taste, and odor from every tap in your home.',features:['Removes chlorine & chloramine','Reduces sediment','Better taste & odor whole home','Sized to your home'],url:'https://shellwatersystems.com/product/double-filtration/'},
+  ro:{name:'Pure Aqua Tankless Reverse Osmosis',badge:'Drinking water add-on',price:'$697',why:'The cleanest possible drinking water at your kitchen tap. Removes up to 99% of contaminants including PFAS, heavy metals, and nitrates.',features:['Removes PFAS & heavy metals','Tankless — compact design','5 finish colors','Pairs with any whole-home system'],url:'https://shellwatersystems.com/product/pure-aqua-tankless-reverse-osmosis/'}
+};
+let ans={},cur=0;
+function getRec(){
+  const p=Array.isArray(ans.problems)?ans.problems:[ans.problems||''];
+  if(p.includes('iron')||ans.source==='well') return prods.iron;
+  const soft=p.includes('hardness')||p.includes('skin');
+  const filt=p.includes('taste')||p.includes('contaminants')||p.includes('unsure');
+  if(soft&&filt) return ans.salt==='saltfree'?prods.saltFreeCombo:prods.saltCombo;
+  if(soft) return ans.salt==='saltfree'?prods.saltFreeSoftener:prods.saltSoftener;
+  return prods.wholeHouse;
+}
+function render(i){
+  const s=steps[i];
+  const pct=((i+1)/steps.length*100);
+  document.getElementById('prog').style.width=pct+'%';
+  document.getElementById('step-count').textContent='Step '+(i+1)+' of '+steps.length;
+  const sel=ans[s.id]||(s.multi?[]:null);
+  const hasAns=s.multi?(sel&&sel.length>0):sel!==null;
+  document.getElementById('body').innerHTML=`
+    <div class="q-text">${s.q}</div>
+    <div class="q-sub">${s.sub}</div>
+    <div class="opts c${s.cols}">${s.opts.map(o=>{
+      const isSel=s.multi?(sel&&sel.includes(o.v)):sel===o.v;
+      return`<button class="opt${isSel?' sel':''}" onclick="pick('${s.id}','${o.v}',${s.multi})"><span class="opt-ico">${o.i}</span><span><span class="opt-l">${o.l}</span><br><span class="opt-d">${o.d}</span></span></button>`;
+    }).join('')}</div>
+    <div class="nav-row">
+      ${i>0?'<button class="btn-bk" onclick="back()">← Back</button>':'<span></span>'}
+      <button class="btn-nx${hasAns?' on':''}" id="nxt" onclick="next()">${i===steps.length-1?'See my recommendation →':'Next →'}</button>
+    </div>`;
+}
+function pick(id,v,multi){
+  if(multi){if(!ans[id])ans[id]=[];const x=ans[id].indexOf(v);x>-1?ans[id].splice(x,1):ans[id].push(v);}
+  else ans[id]=v;
+  render(cur);
+}
+function next(){if(cur<steps.length-1){cur++;render(cur);}else showResult();}
+function back(){if(cur>0){cur--;render(cur);}}
+function showResult(){
+  document.getElementById('prog').style.width='100%';
+  document.getElementById('step-count').textContent='Your match';
+  const rec=getRec();
+  const addRo=ans.drinking==='yes'&&rec!==prods.ro;
+  const roHtml=addRo?`<div class="rec-block" style="margin-top:10px">
+    <div class="rec-top"><div class="rec-badge">${prods.ro.badge}</div><div class="rec-name" style="font-size:17px">${prods.ro.name}</div></div>
+    <div class="rec-body-inner"><div class="rec-why">${prods.ro.why}</div>
+    <ul class="rec-feats">${prods.ro.features.map(f=>`<li>${f}</li>`).join('')}</ul>
+    <div class="rec-price">From ${prods.ro.price}</div>
+    <a class="btn-shop" href="${prods.ro.url}" target="_blank" style="background:var(--green-dark)">View RO system →</a></div></div>`:'';
+  document.getElementById('body').innerHTML=`<div class="result-wrap">
+    <div class="result-top-label">Your recommendation</div>
+    <div class="result-heading">Here's the right system for your home.</div>
+    <div class="result-sub">Based on your answers — confident match, not a guess.</div>
+    <div class="rec-block">
+      <div class="rec-top"><div class="rec-badge">${rec.badge}</div><div class="rec-name">${rec.name}</div></div>
+      <div class="rec-body-inner">
+        <div class="rec-why">${rec.why}</div>
+        <ul class="rec-feats">${rec.features.map(f=>`<li>${f}</li>`).join('')}</ul>
+        <div class="rec-price">From ${rec.price}<span>+ free shipping anywhere in the USA</span></div>
+        <a class="btn-shop" href="${rec.url}" target="_blank">Shop this system →</a>
+        <a class="btn-expert" href="tel:1-888-265-9001">📞 Speak with an expert — 1-888-265-9001</a>
+      </div>
+    </div>${roHtml}
+    <div class="restart-btn" onclick="restart()">← Start over</div>
+  </div>`;
+}
+function restart(){ans={};cur=0;render(0);}
+render(0);
+</script>
+</body>
+</html>
